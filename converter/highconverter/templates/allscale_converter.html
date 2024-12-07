@@ -3,30 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit Converter</title>
+    <title>Allscale Converter</title>
     <style>
         /* Styles for long thin rectangles */
+        body {
+            background-color: rgb(255, 255, 255);
+        }
+        
         .unit-type {
-            width: 100%;
-            padding: 10px 20px;
-            margin: 10px 0;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            /* width: 100%;*/
+            padding: 0.5rem 1.25rem;
+            margin: 0.45rem 0.2rem 0.25rem 0.2rem;
+            background-color: #e2e8eb;
+            border: 1px outset #246e89;
+            border-radius: 6px;
             cursor: pointer;
+            font-family: 'Verdana', sans-serif;
+            color: #194e61;
         }
         .unit-type:hover {
-            background-color: #e0e0e0;
+            background-color: #fcfcfc;
         }
 
         /* Dropdown content */
         .dropdown {
             display: none;
             padding: 15px;
-            background-color: #fafafa;
-            border: 1px solid #ddd;
+            margin: 0.2rem 0.3rem 0.5rem 0.3rem;
+            background-color: #ffffff;
             margin-top: 5px;
             border-radius: 5px;
+            box-shadow: 0 0 0.188rem 0.031rem #297b99;
+            
         }
 
         /* Dropdown visible when active */
@@ -46,10 +54,29 @@
             padding: 5px;
             margin: 5px 0;
         }
+
+        .selector { /* maybe remove this */
+            background-color: #e9e9ed;
+            border: 2px solid #246e89;
+            border-radius: 4px;
+            cursor: grab;
+
+        }
+
+        .adderButton {
+            background-color: #246e89; 
+            color:#ffffff; 
+            border: 2px solid #246e89; 
+            border-radius: 5px;
+        }
+
+        #footer {
+            height: 50px;
+        }
     </style>
 </head>
 <body>
-    <h1>Allscale converter</h1>
+    <h1 style="font-family: 'Roboto Slab', serif; padding-left: 0.5rem; color:#246e89">Allscale Converter</h1>
 
     <!-- Distance Conversion -->
     <div class="unit-type" onclick="toggleDropdown('distance-dropdown')">
@@ -60,7 +87,7 @@
             <select id="distance-unit1" onchange="convertUnits('distance', 'back')">
                 <!-- Options populated dynamically -->
             </select> 
-            <button onclick="showAddUnitPopup('distance')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('distance')">+ Unit</button>
             <input type="number" id="distance-input1" placeholder="Enter value" oninput="convertUnits('distance', 'forw')">
         </div>
         
@@ -78,7 +105,7 @@
     <div id="speed-dropdown" class="dropdown">
         <div class="converter">
             <select id="speed-unit1" onchange="convertUnits('speed', 'back')"></select>
-            <button onclick="showAddUnitPopup('speed')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('speed')">+ Unit</button>
             <input type="number" id="speed-input1" placeholder="Enter value" oninput="convertUnits('speed', 'forw')">
         </div>
         <div class="converter">
@@ -93,7 +120,7 @@
     <div id="weight-dropdown" class="dropdown"> <!--TOO LATE TO CHANGE ALL THE VARIABLE NAMES-->
         <div class="converter">
             <select id="weight-unit1" onchange="convertUnits('weight', 'back')"></select>
-            <button onclick="showAddUnitPopup('weight')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('weight')">+ Unit</button>
             <input type="number" id="weight-input1" placeholder="Enter value" oninput="convertUnits('weight', 'forw')">
         </div>
         <div class="converter">
@@ -108,7 +135,7 @@
     <div id="area-dropdown" class="dropdown">
         <div class="converter">
             <select id="area-unit1" onchange="convertUnits('area', 'back')"></select>
-            <button onclick="showAddUnitPopup('area')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('area')">+ Unit</button>
             <input type="number" id="area-input1" placeholder="Enter value" oninput="convertUnits('area', 'forw')">
         </div>
         <div class="converter">
@@ -123,7 +150,7 @@
     <div id="data-transfer-dropdown" class="dropdown">
         <div class="converter">
             <select id="data-transfer-unit1" onchange="convertUnits('data-transfer', 'back')"></select>
-            <button onclick="showAddUnitPopup('data-transfer')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('data-transfer')">+ Unit</button>
             <input type="number" id="data-transfer-input1" placeholder="Enter value" oninput="convertUnits('data-transfer', 'forw')">
         </div>
         <div class="converter">
@@ -138,7 +165,7 @@
     <div id="digital-storage-dropdown" class="dropdown">
         <div class="converter">
             <select id="digital-storage-unit1" onchange="convertUnits('digital-storage', 'back')"></select>
-            <button onclick="showAddUnitPopup('digital-storage')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('digital-storage')">+ Unit</button>
             <input type="number" id="digital-storage-input1" placeholder="Enter value" oninput="convertUnits('digital-storage', 'forw')">
         </div>
         <div class="converter">
@@ -153,7 +180,7 @@
     <div id="energy-dropdown" class="dropdown">
         <div class="converter">
             <select id="energy-unit1" onchange="convertUnits('energy', 'back')"></select>
-            <button onclick="showAddUnitPopup('energy')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('energy')">+ Unit</button>
             <input type="number" id="energy-input1" placeholder="Enter value" oninput="convertUnits('energy', 'forw')">
         </div>
         <div class="converter">
@@ -168,13 +195,16 @@
     <div id="volume-dropdown" class="dropdown">
         <div class="converter">
             <select id="volume-unit1" onchange="convertUnits('volume', 'back')"></select>
-            <button onclick="showAddUnitPopup('volume')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('volume')">+ Unit</button>
             <input type="number" id="volume-input1" placeholder="Enter value" oninput="convertUnits('volume', 'forw')">
         </div>
         <div class="converter">
             <select id="volume-unit2" onchange="convertUnits('volume', 'forw')"></select>
             <input type="number" id="volume-input2" placeholder="Converted value" oninput="convertUnits('volume', 'back')">
         </div>
+    </div>
+    <div id="footer">
+        <!-- to be continued -->
     </div>
 
     <script>
