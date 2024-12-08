@@ -1,4 +1,4 @@
-# Allconverter
+# Allscale Converter
 
 Convert any unit to any other, add your own units for scale and customizability! 
 
