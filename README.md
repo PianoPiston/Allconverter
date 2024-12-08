@@ -17,8 +17,8 @@ made with django, css, html and js is all placed into the same line for simplici
 
 # Linux
 ```
+git clone https://github.com/PianoPiston/AllscaleConverter.git
 cd converter
 python3 manage.py runserver
-
 ```
-(requirements are python and Django)
+(requirements are git, Python3 and Django)
