@@ -13,7 +13,7 @@ The converter works by defining a unit as an amount of base unit, for example, 1
 some conversions may be incorrect, rounding errors may also be present so this is not a scientific calculator (currently). Feel free to message with any feedback, or fix any conversion rates that are wrong, thank you!
 
 # Hosting:
-made with django, css, html and js is all placed into the same line for simplicity (this is generally considered bad practice, though)
+Made with Django. code for Css, Html and Js is all placed into the same file for simplicity (this is generally considered bad practice, though). File can be located in the templates folder.
 
 # Linux
 ```
