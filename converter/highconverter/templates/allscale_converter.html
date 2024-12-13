@@ -3,26 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Space Grotesk' rel='stylesheet'>
     <title>Allscale Converter</title>
     <style>
-        /* Styles for long thin rectangles */
-        body {
-            background-color: rgb(255, 255, 255);
+
+        :root {
+            --primary-color: #246e89; /* Default: Blue */
+            --secondary-color: #e2e8eb; /* Light blue background */
+            --text-color: #194e61; /* Blue text */
+            --background-color: white;
+            --shadow: #297b99;
+            --hover-color: #fcfcfc;
+            --dropdown-color:#fbfeff;
+            --buttonboxcolor: white;
         }
+
+        input, select {
+            background-color: white; /* Default for light, red, and green themes */
+            color: black; /* Text color */
+            border: 1px solid var(--primary-color); /* Theme-dependent border color */
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        /* Specific styles for dark theme */
+        [data-theme="dark"] input, 
+        [data-theme="dark"] select {
+            background-color: #333333; /* Dark background for inputs and dropdowns */
+            color: white; /* Light text for readability */
+            border: 1px solid #2b6e87; /* Subtle border for dark theme */
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #1282ab;
+            --secondary-color: #1e2933;
+            --text-color: #bee0eb;
+            --shadow: #1a6b89;
+            --background-color: #02151c;
+            --hover-color: #2d4670;
+            --dropdown-color:#0b3442;
+            --buttonboxcolor: #1e2933;
+        }
+
+        [data-theme="red"] {
+            --primary-color: #892424;
+            --secondary-color: #ebe2e2;
+            --text-color: #612121;
+            --shadow: #b62b2b;
+            --dropdown-color:#fffbfb;
+        }
+
+        [data-theme="green"] {
+            --primary-color: #248924;
+            --secondary-color: #e2ebe6;
+            --text-color: #216121;
+            --shadow: #4dbd4d;
+            --dropdown-color:#fbfffc;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        #title_header {
+            font-family: 'Roboto Slab', "Noto Serif", serif; 
+            padding-left: 0.5rem; 
+            color: var(--primary-color);
+        }
+        
         
         .unit-type {
             /* width: 100%;*/
             padding: 0.5rem 1.25rem;
             margin: 0.45rem 0.2rem 0.25rem 0.2rem;
-            background-color: #e2e8eb;
-            border: 1px outset #246e89;
+            /* background-color: #e2e8eb; */
+            /* border: 1px outset #246e89; */
             border-radius: 6px;
             cursor: pointer;
-            font-family: 'Verdana', sans-serif;
-            color: #194e61;
+            font-family: 'Space Grotesk', sans-serif;
+            /* color: #194e61; */
+
+            background-color: var(--secondary-color);
+            border: 1px outset var(--primary-color);
+            color: var(--text-color);
         }
+        
         .unit-type:hover {
-            background-color: #fcfcfc;
+            background-color: var(--hover-color);
         }
 
         /* Dropdown content */
@@ -30,10 +99,10 @@
             display: none;
             padding: 15px;
             margin: 0.2rem 0.3rem 0.5rem 0.3rem;
-            background-color: #ffffff;
+            background-color: var(--dropdown-color);
             margin-top: 5px;
             border-radius: 5px;
-            box-shadow: 0 0 0.188rem 0.031rem #297b99;
+            box-shadow: 0 0 0.188rem 0.031rem var(--shadow);
             
         }
 
@@ -56,7 +125,7 @@
         }
 
         .selector { /* maybe remove this */
-            background-color: #e9e9ed;
+            background-color: #e9e9ed; /* code is deprecated */
             border: 2px solid #246e89;
             border-radius: 4px;
             cursor: grab;
@@ -64,28 +133,32 @@
         }
 
         .adderButton {
-            background-color: #246e89; 
+            background-color: var(--primary-color);
             color:#ffffff; 
-            border: 2px solid #246e89; 
+            border: 2px solid var(--primary-color);
             border-radius: 5px;
             cursor:pointer;
         }
 
         #footer {
-            height: 50px;
+            height: 70px;
         }
 
         /*popup to add units*/
 
+        #label1, #label2, #addunitlabel {
+            color: var(--primary-color);
+        }
+
         #add-unit-popup {
             padding: 20px; 
-            background: white; 
-            border: 2px solid #246e89; 
+            background: var(--background-color); 
+            border: 2px solid var(--primary-color); 
             border-radius: 5px;
             position: fixed;
             inset: 0px;
             width: 24rem;
-            height: 11.5rem;
+            height: 16.5rem;
             max-width: 100vw;
             max-height: 100dvh;
             margin: auto;
@@ -95,39 +168,44 @@
 
         #label1 {
             font-size: x-small;
-            font-family: 'Roboto Slab', serif;
-            color:#246e89
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+            /* color:#246e89 */
         }
         #label2 {
             font-size: x-small;
-            font-family: 'Roboto Slab', serif;
-            color:#246e89;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+            /* color:#246e89; */
             margin-top: 0.5rem;
         }
 
         #saveButton {
             margin-top: 0.5rem;
-            background-color: #246e89;
-            border: 2px solid #246e89; 
+            background-color: var(--primary-color);
+            border: 2px solid var(--primary-color);
             border-radius: 5px;
             color:#ffffff;
             cursor:pointer;
             width: fit-content;
             flex: 1; 
             text-align: center;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
         }
 
         #cancelButton {
             margin-top: 0.5rem;
             background-color: #ffffff;
-            border: 1px solid #246e89; 
+            /* border: 1px solid #246e89;  */
             border-radius: 5px;
-            color:#000000;
+            /* color:#000000; */
             cursor:pointer;
             width: fit-content;
             flex: 1;
             text-align: center; 
             padding: 0;
+
+            border: 1px solid var(--primary-color);
+            color: black;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
         }
 
         #sOrC {
@@ -140,8 +218,8 @@
 
         #addunitlabel {
             font-size: large;
-            font-family: 'Roboto Slab', serif;
-            color:#246e89;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+            /* color:#246e89; */
             margin-top: 0;
         }
 
@@ -153,10 +231,84 @@
             cursor:pointer;
         }
 
+        #addunit_info {
+            font-size: small;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+            color:#6a767a;
+        }
+
+        #default {
+            margin: 0.2rem; 
+            padding: 0.5rem; 
+            border-radius: 100px; 
+            background-color: #e2e8eb; 
+            border-color: #246e89;
+        }
+
+        #R {
+            margin: 0.2rem; 
+            padding: 0.5rem; 
+            border-radius: 100px; 
+            background-color: #ebd2d2; 
+            border-color: #892424;
+        }
+
+        #G {
+            margin: 0.2rem; 
+            padding: 0.5rem; 
+            border-radius: 100px; 
+            background-color: #d2ebd2; 
+            border-color: #248924;
+        }
+
+        #dark_theme {
+            margin: 0.2rem; 
+            padding: 0.5rem; 
+            border-radius: 100px; 
+            background-color: #194e61; 
+            border-color: #1e2933; 
+        }
+
+        #guidebox {
+            font-size: x-small;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+            margin-left: 0.45rem;
+            margin-top: 0.1rem;
+            color: grey;
+        }
+
+        #buttonbox {
+            background: var(--buttonboxcolor);
+            /* border: 1px solid var(--primary-color);  */
+            border-radius: 10px;
+            padding: 3px;
+            padding-bottom: 4px;
+            margin-right: 0.2rem;
+            margin-top: auto; 
+            text-align: right;
+        }
+
     </style>
 </head>
 <body>
-    <h1 style="font-family: 'Roboto Slab', serif; padding-left: 0.5rem; color:#246e89">Allscale Converter</h1>
+    <h1 id="title_header">{Allscale Converter}</h1>
+
+    <div style="display:flex; justify-content: space-between; margin-bottom: 1rem;">
+        <div id="guidebox">
+            Allscale Converter is a unit converter that allows you to create your own custom units for conversions and for visualizing scale! <br>
+            To get started, click on any unit and click [+Unit] to add a custom unit. To clear all saved units for a type of unit, press [-Clear] <br>
+            This site can be saved and ran locally, all units are saved as cookies. Feel free to adjust size with zoom<br>
+            Issues and support: https://github.com/PianoPiston/AllscaleConverter <br>
+            
+        </div>
+
+        <div id="buttonbox">
+            <button onclick="setTheme('red')" id="R"></button>
+            <button onclick="setTheme('green')" id="G"></button>
+            <button onclick="setTheme('light')" id="default"></button>
+            <button onclick="setTheme('dark')" id="dark_theme"></button>
+        </div>
+    </div>
 
     <!-- Distance Conversion -->
     <div class="unit-type" onclick="toggleDropdown('distance-dropdown')">
@@ -291,6 +443,21 @@
             <input type="number" id="volume-input2" placeholder="Converted value" oninput="convertUnits('volume', 'back')">
         </div>
     </div>
+    <div class="unit-type" onclick="toggleDropdown('pressure-dropdown')">
+        Pressure
+    </div>
+    <div id="pressure-dropdown" class="dropdown">
+        <div class="converter">
+            <select id="pressure-unit1" onchange="convertUnits('pressure','back')"></select>
+            <button class="adderButton" onclick="showAddUnitPopup('pressure')">+ Unit</button>
+            <input type="number" id="pressure-input1" placeholder="Enter value" oninput="convertUnits('pressure','forw')">
+        </div>
+        <div class="converter">
+            <select id="pressure-unit2" onchange="convertUnits('pressure','forw')"></select>
+            <button id="clearButton" onclick="clearCookies('pressure')">-Clear</button>
+            <input type="number" id="pressure-input2" placeholder="Converted value" oninput="convertUnits('pressure', 'back')">
+        </div>
+    </div>
     <div id="footer">
         <!-- to be continued -->
     </div>
@@ -312,7 +479,7 @@
             { name: "Inches", value: "inches", conv_rate: 39.3700787402 },
             { name: "Yards", value: "yards", conv_rate: 1.0936132983 },
             { name: "Banana (17cm)", value: "banana", conv_rate: 5.88235294117647058824 },
-            { name: 'Lunar distance (384400km)', value: 'lunar_distance_(384400km)', conv_rate: 2.6014568158168576e-9},
+            { name: 'Lunar distance from earth (384400km)', value: 'lunar_distance_(384400km)', conv_rate: 2.6014568158168576e-9},
             { name: "Earth's diameter (12742km)", value: "earth's_diameter_(12742km)", conv_rate: 7.848061528802386e-8}
         ];
 
@@ -323,7 +490,8 @@
             { name: "Feet per Second", value: "feet_per_second", conv_rate: 3.28084 },
             { name: "Knots", value: "knots", conv_rate: 1.94384 },
             { name: "Speed of sound (340.29m/s)", value: "speed_of_sound_(340.29m/s)", conv_rate: 0.0029386699579770194},
-            { name: 'Speed of light (vacuum 299 792 458m/s)', value: 'speed_of_light_(vacuum_299_792_458m/s)', conv_rate: 3.3356409519815204e-9}
+            { name: 'Speed of light (vacuum 299 792 458m/s)', value: 'speed_of_light_(vacuum_299_792_458m/s)', conv_rate: 3.3356409519815204e-9},
+            { name: 'Thrustssc landspeed record (1228km/h)', value: 'thrustssc_landspeed_record_(1228km/h)', conv_rate: 0.002931596091205212}
         ];
 
         let weightUnits = [
@@ -334,7 +502,7 @@
             { name: "Pounds", value: "pounds", conv_rate: 2.20462 },
             { name: "Ounces", value: "ounces", conv_rate: 35.274 },
             { name: "Stones", value: "stones", conv_rate: 0.157473 },
-            { name: "Your mom (200kg)", value: "your_mom", conv_rate: 0.005 },
+            { name: "Your mom (342kg)", value: "your_mom", conv_rate: 0.0029239766081871343 },
             { name: "Blue Whale (136 000kg)", value: "blue_whale", conv_rate: 0.00000735294117647059 },
             { name: "Car (corolla 1670kg)", value: "car", conv_rate: 0.00059880239520958084}
         ];
@@ -382,7 +550,7 @@
             { name: "Kilowatt-Hours", value: "kilowatt_hours", conv_rate: 1/3.6e6 },
             { name: "Electronvolts", value: "electronvolts", conv_rate: 1.60219e-19 },
             { name: "BTUs", value: "btus", conv_rate: 1/1055.06 },
-            { name: 'Burger (295cal)', value: 'burger_(295cal)', conv_rate: 0.0008101889360598891}
+            { name: 'Cheesburger (319cal)', value: 'burger_(319cal)', conv_rate: 0.0007492342825632203}
         ];
 
         let volumeUnits = [
@@ -393,6 +561,16 @@
             { name: "Cubic Feet", value: "cubic_feet", conv_rate: 0.0353147 },
             { name: "Gallons (US)", value: "gallons_us", conv_rate: 0.264172 },
             { name: "Gallons imperial", value: "gallons_uk", conv_rate: 0.219969 }
+        ];
+
+        let pressureUnits = [
+            { name: "Pascals", value: "pascals", conv_rate: 1 },
+            { name: "Kilopascals", value: "kilopascals", conv_rate: 0.001 },
+            { name: "Bar", value: "bar", conv_rate: 1e-5 },
+            { name: "PSI", value: "psi", conv_rate: 0.0001450377 },
+            { name: "Atmospheres", value: "atmospheres", conv_rate: 9.86923266716013e-6 },
+            { name: "Torr", value: "torr", conv_rate: 0.00750062 },
+            { name: 'Car tire (2.2bar)', value: 'car_tire_(2.2bar)', conv_rate: 0.0000045454545454545455}
         ];
 
 
@@ -418,6 +596,7 @@
                         type === "digital-storage" ? digitalStorageUnits:
                         type === "energy" ? energyUnits:
                         type === "volume" ? volumeUnits:
+                        type === "pressure" ? pressureUnits:
                         weightUnits; // else
             return (theUnits)
         }
@@ -471,6 +650,8 @@
             const popupHTML = `
                 <div id="add-unit-popup">
                     <h3 id="addunitlabel">Add Custom ${type.charAt(0).toUpperCase() + type.slice(1)} Unit</h3>
+                    <p id="addunit_info">Add your own units: enter a name, amount and what unit your custom unit 
+                        is defined in from the dropdown</p>
                     <label id="label1" for="unit-name">Unit Name:</label>
                         <input type="text" id="unit-name" placeholder="e.g., My Custom Unit">
                     <label id="label2" for="unit-amount">Value in:</label>
@@ -523,7 +704,9 @@
             // Add the new unit to the array
             units.push({ name, value: name.toLowerCase().replace(/\s+/g, "_"), conv_rate: finalConvRate });
 
+            // unit-inator
             // alert("{ name: "+"'"+name+"'"+", value: "+"'"+name.toLowerCase().replace(/\s+/g, "_")+"'"+", conv_rate: "+finalConvRate+"}")
+
             // Save the updated array as a cookie
             setCookie(currentType, JSON.stringify(units), 365); // originally a timer function, i odnt have TIME for it though
             closePopup();
@@ -546,6 +729,8 @@
             populateDropdown("energy-unit2", energyUnits);
             populateDropdown("volume-unit1", volumeUnits);
             populateDropdown("volume-unit2", volumeUnits);
+            populateDropdown("pressure-unit1", pressureUnits);
+            populateDropdown("pressure-unit2", pressureUnits);
         }
 
         // Set a cookie that stores the custom unit from the user, stored locally and saved for as long as possible
@@ -581,6 +766,7 @@
             const savedStorageUnits = getCookie("digital-storage");
             const savedEnergyUnits = getCookie("energy");
             const savedVolumeUnits = getCookie("volume");
+            const savedPressureUnits = getCookie("pressure");
 
             if (savedDistanceUnits) distanceUnits = JSON.parse(savedDistanceUnits); // this will have to do. too bad!
             if (savedSpeedUnits) speedUnits = JSON.parse(savedSpeedUnits);
@@ -590,11 +776,14 @@
             if (savedStorageUnits) digitalStorageUnits = JSON.parse(savedStorageUnits);
             if (savedEnergyUnits) energyUnits = JSON.parse(savedEnergyUnits);
             if (savedVolumeUnits) volumeUnits = JSON.parse(savedVolumeUnits);
+            if (savedPressureUnits) pressureUnits = JSON.parse(savedPressureUnits);
 
             // alert(savedDistanceUnits + "\n \n" + distanceUnits)
             // alert(savedVolumeUnits + "\n \n" + volumeUnits)
 
             populateAll()
+            const savedTheme = getThemeFromCookies();
+            setTheme(savedTheme);
         };
 
         function clearCookies(unitType) {
@@ -613,9 +802,31 @@
                 }
             });
             // Notify the user
-            alert(`All cookies for ${unitType} have been cleared.`);
+            // alert(`All cookies for ${unitType} have been cleared.`);
+
+            // after much thought this feature has been removed.
             window.location.reload()
         };
+
+            // Function to set theme
+        function setTheme(theme) {
+            const root = document.documentElement;
+            root.setAttribute("data-theme", theme);
+
+            // Save theme to cookie
+            document.cookie = `theme=${theme}; path=/; max-age=${60 * 60 * 24 * 365}`;
+        };
+
+        // Function to get theme from cookies
+        function getThemeFromCookies() {
+            const cookies = document.cookie.split("; ");
+            for (const cookie of cookies) {
+                const [name, value] = cookie.split("=");
+                if (name === "theme") return value;
+            }
+            return "light"; // Default theme
+        };
+        
     </script>
 </body>
 </html>

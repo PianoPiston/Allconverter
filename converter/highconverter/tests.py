@@ -92,4 +92,29 @@ result = 1/input*type.conversion_ratio
 createcookie(result)
 
 # genius algorithm, i know
+
 """
+
+adsfafds = """
+test:
+
+if cookies respond the correct theme type, 
+
+i
+
+[edkj
+for elif is_backwards=
+=true:
+)
+Colorscheme cmyr
+gb
+
+if color == blue;
+    basecolor=color[0]
+    shade=color[:5]
+    eli
+    
+/()=`
+"""
+
+
