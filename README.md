@@ -1,9 +1,16 @@
 # Allscale Converter
 
-Convert any unit to any other, add your own units for scale and customizability! 
+*Unit converter and scaling tool that allows you to add your own units!*
 
 ![image](https://github.com/user-attachments/assets/0ede8e87-d22d-4519-808b-2aa8ce4266d7)
 
+# Key features
+
+- Create and convert any unit you want, get a sense of scale quickly
+- Three cleanly designed themes to choose from + dark mode
+- Offline friendly - you may download the site to use offline
+
+[did you know, the average blue whale can fit around 81 passenger cars?] 
 # Site:
 https://fissionengine.pythonanywhere.com/
 
@@ -13,10 +20,10 @@ General purpose unit converter that allows the user to add custom units, the uni
 The converter works by defining a unit as an amount of base unit, for example, 1kg is used as the base unit, it's conversion rate is defined as 1. 1g is defined as 1000, and 1 ton is defined as 0.001.
 
 # Notes: 
-some conversions may be incorrect, rounding errors may also be present so this is not a scientific calculator (currently). Feel free to message with any feedback, or fix any conversion rates that are wrong, thank you!
+some conversions may be incorrect, rounding errors may also be present. Feel free to give feedback or fix any code thank you!
 
 # Hosting:
-Made with Django. code for Css, Html and Js is all placed into the same file for simplicity (this is generally considered bad practice, though). File can be located in the templates folder.
+Made with Django. code for Css, Html and Js is all placed into the same file for simplicity. File can be located in the templates folder.
 
 # Linux
 ```
