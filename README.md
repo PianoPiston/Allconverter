@@ -1,6 +1,6 @@
 # Allscale Converter
 
-*Unit converter and scaling tool that allows you to add your own units!*
+*Unit converter, and scaling tool that allows you to add your own units!*
 
 ![image](https://github.com/user-attachments/assets/6fa068c9-199b-421f-92f5-14f7f97c50d1)
 
@@ -14,6 +14,7 @@
 # Site:
 https://fissionengine.pythonanywhere.com/
 
+supports all devices!
 # About
 
 General purpose unit converter that allows the user to add custom units, the units are then saved as cookies. The entire app is one front-end file that can be saved and ran locally.
