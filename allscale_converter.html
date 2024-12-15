@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Space Grotesk' rel='stylesheet'>
+    <title>Allscale Converter</title>
+    <style>
+
+        :root {
+            --primary-color: #246e89; /* Default: Blue */
+            --secondary-color: #e2e8eb; /* Light blue background */
+            --text-color: #194e61; /* Blue text */
+            --background-color: white;
+            --shadow: #297b99;
+            --hover-color: #fcfcfc;
+            --dropdown-color:#fbfeff;
+            --buttonboxcolor: white;
+        }
+
+        input, select {
+            background-color: white; /* Default for light, red, and green themes */
+            color: black; /* Text color */
+            border: 1px solid var(--primary-color); /* Theme-dependent border color */
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        /* Specific styles for dark theme */
+        [data-theme="dark"] input, 
+        [data-theme="dark"] select {
+            background-color: #333333; /* Dark background for inputs and dropdowns */
+            color: white; /* Light text for readability */
+            border: 1px solid #2b6e87; /* Subtle border for dark theme */
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #1282ab;
+            --secondary-color: #1e2933;
+            --text-color: #bee0eb;
+            --shadow: #1a6b89;
+            --background-color: #02151c;
+            --hover-color: #2d4670;
+            --dropdown-color:#0b3442;
+            --buttonboxcolor: #1e2933;
+        }
+
+        [data-theme="red"] {
+            --primary-color: #892424;
+            --secondary-color: #ebe2e2;
+            --text-color: #612121;
+            --shadow: #b62b2b;
+            --dropdown-color:#fffbfb;
+        }
+
+        [data-theme="green"] {
+            --primary-color: #248924;
+            --secondary-color: #e2ebe6;
+            --text-color: #216121;
+            --shadow: #4dbd4d;
+            --dropdown-color:#fbfffc;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        #title_header {
+            font-family: 'Roboto Slab', "Noto Serif", serif; 
+            padding-left: 0.5rem; 
+            color: var(--primary-color);
+        }
+        
+        
+        .unit-type {
+            /* width: 100%;*/
+            padding: 0.5rem 1.25rem;
+            margin: 0.45rem 0.2rem 0.25rem 0.2rem;
+            /* background-color: #e2e8eb; */
+            /* border: 1px outset #246e89; */
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            /* color: #194e61; */
+
+            background-color: var(--secondary-color);
+            border: 1px outset var(--primary-color);
+            color: var(--text-color);
+        }
+        
+        .unit-type:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* Dropdown content */
+        .dropdown {
+            display: none;
+            padding: 15px;
+            margin: 0.2rem 0.3rem 0.5rem 0.3rem;
+            background-color: var(--dropdown-color);
+            margin-top: 5px;
+            border-radius: 5px;
+            box-shadow: 0 0 0.188rem 0.031rem var(--shadow);
+            
+        }
+
+        /* Dropdown visible when active */
+        .dropdown.active {
+            display: block;
+        }
+
+        .converter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .converter input,
+        .converter select {
+            width: 45%;
+            padding: 5px;
+            margin: 5px 0;
+        }
+
+        .selector { /* maybe remove this */
+            background-color: #e9e9ed; /* code is deprecated */
+            border: 2px solid #246e89;
+            border-radius: 4px;
+            cursor: grab;
+
+        }
+
+        .adderButton {
+            background-color: var(--primary-color);
+            color:#ffffff; 
+            border: 1px solid var(--primary-color);
+            border-radius: 5px; /*5px*/
+            cursor:pointer;
+            
+
+        }
+
+        #clearButton {
+            background-color: #e2e8eb;
+            color: #910c0c; 
+            border: 1px solid #6a767a; 
+            border-radius: 5px; /*5px*/
+            cursor:pointer;
+            
+        }
+
+        .adderButton, #clearButton {
+            width: 50px; /* Constant button width */
+            height: 25px; /* Constant button height */
+            font-size: 14px; /* Adjust font size for readability */
+            text-align: center;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        @media (max-width: 1080px) {
+            .adderButton, #clearButton { 
+                font-size: 12px;
+            }
+        }
+
+        #footer {
+            height: 70px;
+        }
+
+        /*popup to add units*/
+
+        #label1, #label2, #addunitlabel {
+            color: var(--primary-color);
+        }
+
+        #add-unit-popup {
+            padding: 20px; 
+            background: var(--background-color); 
+            border: 2px solid var(--primary-color); 
+            border-radius: 5px;
+            position: fixed;
+            inset: 0px;
+            width: 24rem;
+            height: 16.5rem;
+            max-width: 100vw;
+            max-height: 100dvh;
+            margin: auto;
+            display: flex;
+            flex-flow:column;
+            z-index: 3;
+        }
+
+        @media (max-width: 480px) {
+            #add-unit-popup { 
+                width: auto; 
+                margin-left: 1rem;
+                margin-right: 1rem;
+                height: 17.5rem;
+            }
+        }
+
+        #label1 {
+            font-size: x-small;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+            /* color:#246e89 */
+        }
+        #label2 {
+            font-size: x-small;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+            /* color:#246e89; */
+            margin-top: 0.5rem;
+        }
+
+        #saveButton {
+            margin-top: 0.5rem;
+            background-color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 5px;
+            color:#ffffff;
+            cursor:pointer;
+            width: fit-content;
+            flex: 1; 
+            text-align: center;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+        }
+
+        #cancelButton {
+            margin-top: 0.5rem;
+            background-color: #ffffff;
+            /* border: 1px solid #246e89;  */
+            border-radius: 5px;
+            /* color:#000000; */
+            cursor:pointer;
+            width: fit-content;
+            flex: 1;
+            text-align: center; 
+            padding: 0;
+
+            border: 1px solid var(--primary-color);
+            color: black;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+        }
+
+        #sOrC {
+            display: flex;
+            align-items: stretch;
+            gap: 0.5rem; 
+            align-items: stretch;
+            margin-top: 0.5rem;
+        }
+
+        #addunitlabel {
+            font-size: large;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+            /* color:#246e89; */
+            margin-top: 0;
+        }
+
+        #addunit_info {
+            font-size: small;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+            color:#6a767a;
+        }
+
+        #default {
+            margin: 0.2rem; 
+            padding: 0.5rem; 
+            border-radius: 100px; 
+            background-color: #e2e8eb; 
+            border-color: #246e89;
+        }
+
+        #R {
+            margin: 0.2rem; 
+            padding: 0.5rem; 
+            border-radius: 100px; 
+            background-color: #ebd2d2; 
+            border-color: #892424;
+        }
+
+        #G {
+            margin: 0.2rem; 
+            padding: 0.5rem; 
+            border-radius: 100px; 
+            background-color: #d2ebd2; 
+            border-color: #248924;
+        }
+
+        #dark_theme {
+            margin: 0.2rem; 
+            padding: 0.5rem; 
+            border-radius: 100px; 
+            background-color: #194e61; 
+            border-color: #1e2933; 
+        }
+
+        #guidebox {
+            font-size: x-small;
+            font-family: 'Roboto Slab', "Noto Serif", serif;
+            margin-left: 0.45rem;
+            margin-top: 0.1rem;
+            color: grey;
+        }
+
+        #buttonbox {
+            background: var(--buttonboxcolor);
+            /* border: 1px solid var(--primary-color);  */
+            border-radius: 10px;
+            padding: 3px;
+            padding-bottom: 4px;
+            margin-right: 0.2rem;
+            margin-top: auto; 
+            text-align: right;
+        }
+
+        #overlay {
+            position: fixed;
+            inset: 0; /* Covers the entire screen */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            z-index: 2; /* Above all elements except the popup */
+            display: none; /* Hidden by default */
+        }
+
+        #help-container {
+            margin-top: auto;
+            margin-left: 0.5rem;
+            font-family: 'space grotesk', "Noto Serif", serif;
+        }
+
+        #help-toggle {
+            cursor: pointer;
+            color: grey;
+            font-weight: bold;
+            display: inline-block;
+            
+        }
+
+        #help-toggle.open::after {
+            content: ' 🞁'; /* Upward triangle when open */
+            font-family: 'space grotesk', "Noto Serif", serif;
+        }
+
+        #help-toggle:not(.open)::after {
+            content: ' 🞃'; /* Downward triangle when closed */
+            font-family: 'space grotesk', "Noto Serif", serif;
+        }
+
+        #guidebox {
+            /* padding: 0.5rem; */
+            margin-left: 0rem;
+            /* background-color: var(--secondary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 5px; */
+            color: grey;
+            display: none; /* Initially hidden */
+
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <div id="overlay"></div>
+    <h1 id="title_header">{Allscale Converter}</h1>
+
+    <div style="display:flex; justify-content: space-between; margin-bottom: 1rem;">
+        <div id="help-container">
+            <div id="help-toggle" onclick="toggleGuidebox()">Guide</div> <!-- Downward triangle -->
+            <div id="guidebox" style="display: none;">
+                Allscale Converter is a unit converter that allows you to create your own custom units for conversions and for visualizing scale! <br>
+                To get started, click on any unit and click [+Unit] to add a custom unit. To clear all saved units for a type of unit, press [Clear] <br>
+                This site can be saved and ran locally, all units are saved as cookies. Feel free to adjust size with zoom<br>
+                Issues and support: <a href='https://github.com/PianoPiston/AllscaleConverter'>Github</a> <br>
+            </div>
+        </div>
+
+        <div id="buttonbox">
+            <button onclick="setTheme('red')" id="R"></button>
+            <button onclick="setTheme('green')" id="G"></button>
+            <button onclick="setTheme('light')" id="default"></button>
+            <button onclick="setTheme('dark')" id="dark_theme"></button>
+        </div>
+    </div>
+
+    <!-- Distance Conversion -->
+    <div class="unit-type" onclick="toggleDropdown('distance-dropdown')">
+        Distance
+    </div>
+    <div id="distance-dropdown" class="dropdown">
+        <div class="converter">
+            <select id="distance-unit1" onchange="convertUnits('distance', 'back')">
+                <!-- Options populated dynamically -->
+            </select> 
+            <button class="adderButton" onclick="showAddUnitPopup('distance')">+Unit</button>
+            <input type="number" id="distance-input1" placeholder="Enter value" oninput="convertUnits('distance', 'forw')">
+        </div>
+        
+        <div class="converter">
+            <select id="distance-unit2" onchange="convertUnits('distance', 'forw')">
+                <!-- Options populated dynamically -->
+            </select>
+            <button id="clearButton" onclick="clearCookies('distance')">Clear</button>
+            <input type="number" id="distance-input2" placeholder="Converted value" oninput="convertUnits('distance', 'back')">
+        </div>
+    </div>
+
+    <div class="unit-type" onclick="toggleDropdown('speed-dropdown')">
+        Speed
+    </div>
+    <div id="speed-dropdown" class="dropdown">
+        <div class="converter">
+            <select id="speed-unit1" onchange="convertUnits('speed', 'back')"></select>
+            <button class="adderButton" onclick="showAddUnitPopup('speed')">+Unit</button>
+            <input type="number" id="speed-input1" placeholder="Enter value" oninput="convertUnits('speed', 'forw')">
+        </div>
+        <div class="converter">
+            <select id="speed-unit2" onchange="convertUnits('speed', 'forw')"></select>
+            <button id="clearButton" onclick="clearCookies('speed')">Clear</button>
+            <input type="number" id="speed-input2" placeholder="Converted value" oninput="convertUnits('speed', 'back')">
+        </div>
+    </div>
+
+    <div class="unit-type" onclick="toggleDropdown('weight-dropdown')"> <!-- IT'S ACTUALLY MASS, I DONT KNOW WHY I PUT WEIGHT-->
+        Mass 
+    </div>
+    <div id="weight-dropdown" class="dropdown"> <!--TOO LATE TO CHANGE ALL THE VARIABLE NAMES-->
+        <div class="converter">
+            <select id="weight-unit1" onchange="convertUnits('weight', 'back')"></select>
+            <button class="adderButton" onclick="showAddUnitPopup('weight')">+Unit</button>
+            <input type="number" id="weight-input1" placeholder="Enter value" oninput="convertUnits('weight', 'forw')">
+        </div>
+        <div class="converter">
+            <select id="weight-unit2" onchange="convertUnits('weight', 'forw')"></select>
+            <button id="clearButton" onclick="clearCookies('weight')">Clear</button>
+            <input type="number" id="weight-input2" placeholder="Converted value" oninput="convertUnits('weight', 'back')">
+        </div>
+    </div>    
+
+    <div class="unit-type" onclick="toggleDropdown('area-dropdown')">
+        Area
+    </div>
+    <div id="area-dropdown" class="dropdown">
+        <div class="converter">
+            <select id="area-unit1" onchange="convertUnits('area', 'back')"></select>
+            <button class="adderButton" onclick="showAddUnitPopup('area')">+Unit</button>
+            <input type="number" id="area-input1" placeholder="Enter value" oninput="convertUnits('area', 'forw')">
+        </div>
+        <div class="converter">
+            <select id="area-unit2" onchange="convertUnits('area', 'forw')"></select>
+            <button id="clearButton" onclick="clearCookies('area')">Clear</button>
+            <input type="number" id="area-input2" placeholder="Converted value" oninput="convertUnits('area', 'back')">
+        </div>
+    </div>
+    
+    <div class="unit-type" onclick="toggleDropdown('data-transfer-dropdown')">
+        Data Transfer Rate
+    </div>
+    <div id="data-transfer-dropdown" class="dropdown">
+        <div class="converter">
+            <select id="data-transfer-unit1" onchange="convertUnits('data-transfer', 'back')"></select>
+            <button class="adderButton" onclick="showAddUnitPopup('data-transfer')">+Unit</button>
+            <input type="number" id="data-transfer-input1" placeholder="Enter value" oninput="convertUnits('data-transfer', 'forw')">
+        </div>
+        <div class="converter">
+            <select id="data-transfer-unit2" onchange="convertUnits('data-transfer', 'forw')"></select>
+            <button id="clearButton" onclick="clearCookies('data-transfer')">Clear</button>
+            <input type="number" id="data-transfer-input2" placeholder="Converted value" oninput="convertUnits('data-transfer', 'back')">
+        </div>
+    </div>
+    
+    <div class="unit-type" onclick="toggleDropdown('digital-storage-dropdown')">
+        Digital Storage
+    </div>
+    <div id="digital-storage-dropdown" class="dropdown">
+        <div class="converter">
+            <select id="digital-storage-unit1" onchange="convertUnits('digital-storage', 'back')"></select>
+            <button class="adderButton" onclick="showAddUnitPopup('digital-storage')">+Unit</button>
+            <input type="number" id="digital-storage-input1" placeholder="Enter value" oninput="convertUnits('digital-storage', 'forw')">
+        </div>
+        <div class="converter">
+            <select id="digital-storage-unit2" onchange="convertUnits('digital-storage', 'forw')"></select>
+            <button id="clearButton" onclick="clearCookies('digital-storage')">Clear</button>
+            <input type="number" id="digital-storage-input2" placeholder="Converted value" oninput="convertUnits('digital-storage', 'back')">
+        </div>
+    </div>
+    
+    <div class="unit-type" onclick="toggleDropdown('energy-dropdown')">
+        Energy
+    </div>
+    <div id="energy-dropdown" class="dropdown">
+        <div class="converter">
+            <select id="energy-unit1" onchange="convertUnits('energy', 'back')"></select>
+            <button class="adderButton" onclick="showAddUnitPopup('energy')">+Unit</button>
+            <input type="number" id="energy-input1" placeholder="Enter value" oninput="convertUnits('energy', 'forw')">
+        </div>
+        <div class="converter">
+            <select id="energy-unit2" onchange="convertUnits('energy', 'forw')"></select>
+            <button id="clearButton" onclick="clearCookies('energy')">Clear</button>
+            <input type="number" id="energy-input2" placeholder="Converted value" oninput="convertUnits('energy', 'back')">
+        </div>
+    </div>
+    
+    <div class="unit-type" onclick="toggleDropdown('volume-dropdown')">
+        Volume
+    </div>
+    <div id="volume-dropdown" class="dropdown">
+        <div class="converter">
+            <select id="volume-unit1" onchange="convertUnits('volume', 'back')"></select>
+            <button class="adderButton" onclick="showAddUnitPopup('volume')">+Unit</button>
+            <input type="number" id="volume-input1" placeholder="Enter value" oninput="convertUnits('volume', 'forw')">
+        </div>
+        <div class="converter">
+            <select id="volume-unit2" onchange="convertUnits('volume', 'forw')"></select>
+            <button id="clearButton" onclick="clearCookies('volume')">Clear</button>
+            <input type="number" id="volume-input2" placeholder="Converted value" oninput="convertUnits('volume', 'back')">
+        </div>
+    </div>
+    <div class="unit-type" onclick="toggleDropdown('pressure-dropdown')">
+        Pressure
+    </div>
+    <div id="pressure-dropdown" class="dropdown">
+        <div class="converter">
+            <select id="pressure-unit1" onchange="convertUnits('pressure','back')"></select>
+            <button class="adderButton" onclick="showAddUnitPopup('pressure')">+Unit</button>
+            <input type="number" id="pressure-input1" placeholder="Enter value" oninput="convertUnits('pressure','forw')">
+        </div>
+        <div class="converter">
+            <select id="pressure-unit2" onchange="convertUnits('pressure','forw')"></select>
+            <button id="clearButton" onclick="clearCookies('pressure')">Clear</button>
+            <input type="number" id="pressure-input2" placeholder="Converted value" oninput="convertUnits('pressure', 'back')">
+        </div>
+    </div>
+    <div id="footer">
+        <!-- to be continued -->
+    </div>
+
+    <script>
+        // Function to toggle dropdown visibility
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.classList.toggle('active');
+        }
+
+        let distanceUnits = [
+            { name: "Centimeters", value: "centimeters", conv_rate: 100 },
+            { name: "Meters", value: "meters", conv_rate: 1 },
+            { name: "Kilometers", value: "kilometers", conv_rate: 0.001 },
+            { name: "Miles", value: "miles", conv_rate: 0.0006213712 },
+            { name: "Nautical Miles", value: "nautical_miles", conv_rate: 1/1852 },
+            { name: "Feet", value: "feet", conv_rate: 3.280839895 },
+            { name: "Inches", value: "inches", conv_rate: 39.3700787402 },
+            { name: "Yards", value: "yards", conv_rate: 1.0936132983 },
+            { name: "Banana (17cm)", value: "banana", conv_rate: 5.88235294117647058824 },
+            { name: 'Lunar distance from earth (384400km)', value: 'lunar_distance_(384400km)', conv_rate: 2.6014568158168576e-9},
+            { name: "Earth's diameter (12742km)", value: "earth's_diameter_(12742km)", conv_rate: 7.848061528802386e-8}
+        ];
+
+        let speedUnits = [
+            { name: "Meters per Second", value: "meters_per_second", conv_rate: 1 },
+            { name: "Kilometers per Hour", value: "kilometers_per_hour", conv_rate: 3.6 },
+            { name: "Miles per Hour", value: "miles_per_hour", conv_rate: 2.23694 },
+            { name: "Feet per Second", value: "feet_per_second", conv_rate: 3.28084 },
+            { name: "Knots", value: "knots", conv_rate: 1.94384 },
+            { name: "Speed of sound (340.29m/s)", value: "speed_of_sound_(340.29m/s)", conv_rate: 0.0029386699579770194},
+            { name: 'Speed of light (vacuum 299 792 458m/s)', value: 'speed_of_light_(vacuum_299_792_458m/s)', conv_rate: 3.3356409519815204e-9},
+            { name: 'Thrustssc landspeed record (1228km/h)', value: 'thrustssc_landspeed_record_(1228km/h)', conv_rate: 0.002931596091205212}
+        ];
+
+        let weightUnits = [
+            { name: "Kilograms", value: "kilograms", conv_rate: 1 },
+            { name: "Grams", value: "grams", conv_rate: 1000 },
+            { name: "Milligrams", value: "milligrams", conv_rate: 1000000 },
+            { name: "Tonnes", value: "tonnes", conv_rate: 0.001 },
+            { name: "Pounds", value: "pounds", conv_rate: 2.20462 },
+            { name: "Ounces", value: "ounces", conv_rate: 35.274 },
+            { name: "Stones", value: "stones", conv_rate: 0.157473 },
+            { name: "Your mom (342kg)", value: "your_mom", conv_rate: 0.0029239766081871343 },
+            { name: "Blue Whale (136 000kg)", value: "blue_whale", conv_rate: 0.00000735294117647059 },
+            { name: "Car (corolla 1670kg)", value: "car", conv_rate: 0.00059880239520958084}
+        ];
+
+        let areaUnits = [
+            { name: "Square Meters", value: "square_meters", conv_rate: 1 },
+            { name: "Square Kilometers", value: "square_kilometers", conv_rate: 1e-6 },
+            { name: "Square Miles", value: "square_miles", conv_rate: 3.861e-7 }, // fix!! fix all of this crap
+            { name: "Square Yards", value: "square_yards", conv_rate: 1.19599 },
+            { name: "Square Feet", value: "square_feet", conv_rate: 10.7639 },
+            { name: "Square Inches", value: "square_inches", conv_rate: 1550 },
+            { name: "Hectares", value: "hectares", conv_rate: 1e-4 },
+            { name: "Acres", value: "acres", conv_rate: 0.0002471054 },
+            { name: 'Football field (5350m²)', value: 'football_field_(5350m²)', conv_rate: 0.00018691588785046728}
+        ];
+
+        let dataTransferRateUnits = [
+            { name: "Bits per Second (bps)", value: "bps", conv_rate: 1 },
+            { name: "Kilobits per Second (kbps)", value: "kbps", conv_rate: 1e-3 },
+            { name: "Megabits per Second (Mbps)", value: "mbps", conv_rate: 1e-6 },
+            { name: "Gigabits per Second (Gbps)", value: "gbps", conv_rate: 1e-9 },
+            { name: "Terabits per Second (Tbps)", value: "tbps", conv_rate: 1e-12 },
+            { name: "Bytes per Second (Bps)", value: "Bps", conv_rate: 0.125 },
+            { name: "Kilobytes per Second (kBps)", value: "kBps", conv_rate: 0.000125 },
+            { name: "Megabytes per Second (MBps)", value: "MBps", conv_rate: 1.25e-7 }
+        ];
+        
+        let digitalStorageUnits = [
+            { name: "Bytes", value: "bytes", conv_rate: 1 },
+            { name: "Kilobytes", value: "kilobytes", conv_rate: 1e-3 },
+            { name: "Megabytes", value: "megabytes", conv_rate: 1e-6 },
+            { name: "Gigabytes", value: "gigabytes", conv_rate: 1e-9 },
+            { name: "Terabytes", value: "terabytes", conv_rate: 1e-12 },
+            { name: "Petabytes", value: "petabytes", conv_rate: 1e-15 },
+            { name: "Bits", value: "bits", conv_rate: 8 },
+            { name: "Kilobits", value: "kilobits", conv_rate: 0.008 },
+            { name: 'Floppy disk (1.44MB)', value: 'floppy_disk_(1.44mb)', conv_rate: 6.944444444444444e-7}
+        ];
+
+        let energyUnits = [
+            { name: "Joules", value: "joules", conv_rate: 1 },
+            { name: "Kilojoules", value: "kilojoules", conv_rate: 1e-3 },
+            { name: "Calories", value: "calories", conv_rate: 1/4.184 },
+            { name: "Kilocalories", value: "kilocalories", conv_rate: 1/4184 },
+            { name: "Watt-Hours", value: "watt_hours", conv_rate: 1/3600 },
+            { name: "Kilowatt-Hours", value: "kilowatt_hours", conv_rate: 1/3.6e6 },
+            { name: "Electronvolts", value: "electronvolts", conv_rate: 1.60219e-19 },
+            { name: "BTUs", value: "btus", conv_rate: 1/1055.06 },
+            { name: 'Cheesburger (319cal)', value: 'burger_(319cal)', conv_rate: 0.0007492342825632203},
+            { name: '1 liter of Petrol (33.526kJ)', value: '1_liter_of_petrol_(33.526kj)', conv_rate: 0.00002982759649227465}
+        ];
+
+        let volumeUnits = [
+            { name: "Liters", value: "liters", conv_rate: 1 },
+            { name: "Milliliters", value: "milliliters", conv_rate: 1000 },
+            { name: "Cubic Meters", value: "cubic_meters", conv_rate: 0.001 },
+            { name: "Cubic Inches", value: "cubic_inches", conv_rate: 61023.744095 },
+            { name: "Cubic Feet", value: "cubic_feet", conv_rate: 0.0353147 },
+            { name: "Gallons (US)", value: "gallons_us", conv_rate: 0.264172 },
+            { name: "Gallons imperial", value: "gallons_uk", conv_rate: 0.219969 }
+        ];
+
+        let pressureUnits = [
+            { name: "Pascals", value: "pascals", conv_rate: 1 },
+            { name: "Kilopascals", value: "kilopascals", conv_rate: 0.001 },
+            { name: "Bar", value: "bar", conv_rate: 1e-5 },
+            { name: "PSI", value: "psi", conv_rate: 0.0001450377 },
+            { name: "Atmospheres", value: "atmospheres", conv_rate: 9.86923266716013e-6 },
+            { name: "Torr", value: "torr", conv_rate: 0.00750062 },
+            { name: 'Car tire (2.2bar)', value: 'car_tire_(2.2bar)', conv_rate: 0.0000045454545454545455},
+            { name: 'Titanic depth (400 atm)', value: 'titanic_depth_(400_atm)', conv_rate: 2.4673081667900326e-8},
+            { name: 'Car pressure washer (2000psi)', value: 'car_pressure_washer_(2000psi)', conv_rate: 7.251885e-8}
+        ];
+
+
+
+        // Populate dropdown options dynamically
+        function populateDropdown(selectId, units) {
+            //alert(units)
+            const selectElement = document.getElementById(selectId);
+            selectElement.innerHTML = ""; // Clear existing options
+            units.forEach(unit => {
+                const option = document.createElement("option");
+                option.value = unit.value;
+                option.textContent = unit.name;
+                selectElement.appendChild(option);
+            });
+        }
+
+        function getUnitsFromType (type) { // ternary case for simplicity
+            let theUnits = type === "distance" ? distanceUnits :  // it assigns units based on what type is.
+                        type === "speed" ? speedUnits :
+                        type === "area" ? areaUnits: 
+                        type === "data-transfer" ? dataTransferRateUnits:
+                        type === "digital-storage" ? digitalStorageUnits:
+                        type === "energy" ? energyUnits:
+                        type === "volume" ? volumeUnits:
+                        type === "pressure" ? pressureUnits:
+                        weightUnits; // else
+            return (theUnits)
+        }
+
+        // Conversion function
+        function convertUnits(type, direction) {
+            const units = getUnitsFromType(type);
+
+            const unit1Select = document.getElementById(`${type}-unit1`);
+            const unit2Select = document.getElementById(`${type}-unit2`);
+            const input1 = document.getElementById(`${type}-input1`); 
+            const input2 = document.getElementById(`${type}-input2`);
+
+            const unit1 = units.find(u => u.value === unit1Select.value);
+            const unit2 = units.find(u => u.value === unit2Select.value);
+
+            // i invented my own way to convert units, see tests.py for notes (no testcases there)
+            if (direction === "forw") { // Forward conversion
+                input2.value = (input1.value * unit2.conv_rate / unit1.conv_rate)
+            } else if (direction === "back") { // Backward conversion
+                input1.value = (input2.value * unit1.conv_rate / unit2.conv_rate)
+            }
+        }
+
+        const baseUnits = { // deprecate this
+            distance: "meters",
+            speed: "meters per second",
+            weight: "kilograms",
+            area: "square_meters",
+            volume:"liters"
+            
+        };
+
+        // Current unit type for the popup
+        let currentType = "";
+
+        // Show the popup to add a new unit
+        function showAddUnitPopup(type) {
+            currentType = type;
+            const displayUnit = getUnitsFromType(type);
+
+            // Create a simple popup
+            const popupHTML = `
+                <div id="add-unit-popup">
+                    <h3 id="addunitlabel">Add Custom ${type.charAt(0).toUpperCase() + type.slice(1)} Unit</h3>
+                    <p id="addunit_info">Add your own units: enter a name, amount and what unit your custom unit 
+                        is defined in from the dropdown</p>
+                    <label id="label1" for="unit-name">Unit Name:</label>
+                        <input type="text" id="unit-name" placeholder="e.g., My Custom Unit">
+                    <label id="label2" for="unit-amount">Value in:</label>
+                        <input type="number" id="unit-amount" placeholder="e.g., 1.5">
+                    <select id="selection_units"></select>
+                    <div id="sOrC">
+                    <button id="saveButton" onclick="saveCustomUnit('${currentType}')">Save</button>
+                    <button id="cancelButton" onclick="closePopup()">Cancel</button>
+                    </div>
+                </div>
+            `;
+            
+            // Append popup to body
+            const popupDiv = document.createElement("div");
+            popupDiv.innerHTML = popupHTML;
+            document.body.appendChild(popupDiv);
+            populateDropdown("selection_units", displayUnit);
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        // Close the popup
+        function closePopup() {
+            const popup = document.getElementById("add-unit-popup");
+            if (popup) popup.remove();
+            document.getElementById("overlay").style.display = "none";
+        }
+
+        // Save the custom unit
+        function saveCustomUnit(type) {
+            let name = document.getElementById("unit-name").value.trim();
+            let value = parseFloat(document.getElementById("unit-amount").value);
+            let unit_selected = document.getElementById("selection_units").value.trim();
+
+            if (!name || isNaN(value) || value <= 0) {
+                alert("Please enter a valid name and value.");
+                return;
+            }
+
+            // Get the correct units array
+            const units = getUnitsFromType(currentType);
+
+            const computeUnit = getUnitsFromType(type);
+
+            if (!units) {
+                alert("Invalid unit type.");
+                return;
+            }
+
+            let selectedConvRate = (computeUnit.find(u => u.value === unit_selected)).conv_rate // the conversion rate we get from a unit
+            let finalConvRate = 1 / value * selectedConvRate // genius inventions, yk?
+            
+            // Add the new unit to the array
+            units.push({ name, value: name.toLowerCase().replace(/\s+/g, "_"), conv_rate: finalConvRate });
+
+            // unit-inator
+            // alert("{ name: "+"'"+name+"'"+", value: "+"'"+name.toLowerCase().replace(/\s+/g, "_")+"'"+", conv_rate: "+finalConvRate+"}")
+
+            // Save the updated array as a cookie
+            setCookie(currentType, JSON.stringify(units), 365); // originally a timer function, i odnt have TIME for it though
+            closePopup();
+        }
+
+        function populateAll() {
+            populateDropdown("distance-unit1", distanceUnits);
+            populateDropdown("distance-unit2", distanceUnits); 
+            populateDropdown("speed-unit1", speedUnits);
+            populateDropdown("speed-unit2", speedUnits);
+            populateDropdown("weight-unit1", weightUnits);
+            populateDropdown("weight-unit2", weightUnits);
+            populateDropdown("area-unit1", areaUnits);
+            populateDropdown("area-unit2", areaUnits);
+            populateDropdown("data-transfer-unit1", dataTransferRateUnits);
+            populateDropdown("data-transfer-unit2", dataTransferRateUnits);
+            populateDropdown("digital-storage-unit1", digitalStorageUnits);
+            populateDropdown("digital-storage-unit2", digitalStorageUnits);
+            populateDropdown("energy-unit1", energyUnits);
+            populateDropdown("energy-unit2", energyUnits);
+            populateDropdown("volume-unit1", volumeUnits);
+            populateDropdown("volume-unit2", volumeUnits);
+            populateDropdown("pressure-unit1", pressureUnits);
+            populateDropdown("pressure-unit2", pressureUnits);
+        }
+
+        // Set a cookie that stores the custom unit from the user, stored locally and saved for as long as possible
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = `${name}=${value};${expires};path=/`;
+            populateAll()
+        }
+
+        // Get a cookie (the unit that the user created)
+        function getCookie(name) {
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const cookies = decodedCookie.split(";");
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.indexOf(name + "=") === 0) {
+                    return cookie.substring(name.length + 1);
+                }
+            }
+            return null;
+        }
+
+        // Load saved units from cookies on page load
+        window.onload = function() {
+            
+            const savedDistanceUnits = getCookie("distance"); // i am well aware that there is a more elegant way
+            const savedSpeedUnits = getCookie("speed"); // but the lines of code saved isnt worth the extra time
+            const savedWeightUnits = getCookie("weight"); 
+            const savedAreaUnits = getCookie("area");
+            const savedTransferUnits = getCookie("data-transfer");
+            const savedStorageUnits = getCookie("digital-storage");
+            const savedEnergyUnits = getCookie("energy");
+            const savedVolumeUnits = getCookie("volume");
+            const savedPressureUnits = getCookie("pressure");
+
+            if (savedDistanceUnits) distanceUnits = JSON.parse(savedDistanceUnits); // this will have to do. too bad!
+            if (savedSpeedUnits) speedUnits = JSON.parse(savedSpeedUnits);
+            if (savedWeightUnits) weightUnits = JSON.parse(savedWeightUnits);
+            if (savedAreaUnits) areaUnits = JSON.parse(savedAreaUnits);
+            if (savedTransferUnits) dataTransferRateUnits = JSON.parse(savedTransferUnits);
+            if (savedStorageUnits) digitalStorageUnits = JSON.parse(savedStorageUnits);
+            if (savedEnergyUnits) energyUnits = JSON.parse(savedEnergyUnits);
+            if (savedVolumeUnits) volumeUnits = JSON.parse(savedVolumeUnits);
+            if (savedPressureUnits) pressureUnits = JSON.parse(savedPressureUnits);
+
+            // alert(savedDistanceUnits + "\n \n" + distanceUnits)
+            // alert(savedVolumeUnits + "\n \n" + volumeUnits)
+
+            populateAll();
+            const savedTheme = getThemeFromCookies();
+            setTheme(savedTheme);
+        };
+
+        function clearCookies(unitType) {
+            // Get all cookies
+            const cookies = document.cookie.split(';');
+
+            // Loop through each cookie
+            cookies.forEach(cookie => {
+                // Extract the cookie name (key)
+                const cookieName = cookie.split('=')[0].trim();
+
+                // Check if the cookie name starts with the unit type
+                if (cookieName.startsWith(unitType)) {
+                    // Delete the cookie by setting its expiration date to the past
+                    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+                }
+            });
+            // Notify the user
+            // alert(`All cookies for ${unitType} have been cleared.`);
+
+            // after much thought this feature has been removed.
+            window.location.reload()
+        };
+
+            // Function to set theme
+        function setTheme(theme) {
+            const root = document.documentElement;
+            root.setAttribute("data-theme", theme);
+
+            // Save theme to cookie
+            document.cookie = `theme=${theme}; path=/; max-age=${60 * 60 * 24 * 365}`;
+        };
+
+        // Function to get theme from cookies
+        function getThemeFromCookies() {
+            const cookies = document.cookie.split("; ");
+            for (const cookie of cookies) {
+                const [name, value] = cookie.split("=");
+                if (name === "theme") return value;
+            }
+            return "light"; // Default theme
+        };
+
+        function toggleGuidebox() {
+            const guidebox = document.getElementById('guidebox');
+            const toggle = document.getElementById('help-toggle');
+
+            if (guidebox.style.display === 'none') {
+                guidebox.style.display = 'block'; // Show guidebox
+                toggle.classList.add('open');    // Add open state
+            } else {
+                guidebox.style.display = 'none'; // Hide guidebox
+                toggle.classList.remove('open'); // Remove open state
+            }
+        }
+        
+    </script>
+</body>
+</html>
+
