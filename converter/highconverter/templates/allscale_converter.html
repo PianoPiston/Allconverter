@@ -135,9 +135,37 @@
         .adderButton {
             background-color: var(--primary-color);
             color:#ffffff; 
-            border: 2px solid var(--primary-color);
-            border-radius: 5px;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px; /*5px*/
             cursor:pointer;
+            
+
+        }
+
+        #clearButton {
+            background-color: #e2e8eb;
+            color: #910c0c; 
+            border: 1px solid #6a767a; 
+            border-radius: 5px; /*5px*/
+            cursor:pointer;
+            
+        }
+
+        .adderButton, #clearButton {
+            width: 50px; /* Constant button width */
+            height: 25px; /* Constant button height */
+            font-size: 14px; /* Adjust font size for readability */
+            text-align: center;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        @media (max-width: 1080px) {
+            .adderButton, #clearButton { 
+                font-size: 12px;
+            }
         }
 
         #footer {
@@ -164,6 +192,16 @@
             margin: auto;
             display: flex;
             flex-flow:column;
+            z-index: 3;
+        }
+
+        @media (max-width: 480px) {
+            #add-unit-popup { 
+                width: auto; 
+                margin-left: 1rem;
+                margin-right: 1rem;
+                height: 17.5rem;
+            }
         }
 
         #label1 {
@@ -223,14 +261,6 @@
             margin-top: 0;
         }
 
-        #clearButton {
-            background-color: #e2e8eb;
-            color: #910c0c; 
-            border: 1px solid #6a767a; 
-            border-radius: 5px;
-            cursor:pointer;
-        }
-
         #addunit_info {
             font-size: small;
             font-family: 'Roboto Slab', "Noto Serif", serif;
@@ -288,18 +318,66 @@
             text-align: right;
         }
 
+        #overlay {
+            position: fixed;
+            inset: 0; /* Covers the entire screen */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            z-index: 2; /* Above all elements except the popup */
+            display: none; /* Hidden by default */
+        }
+
+        #help-container {
+            margin-top: auto;
+            margin-left: 0.5rem;
+            font-family: 'space grotesk', "Noto Serif", serif;
+        }
+
+        #help-toggle {
+            cursor: pointer;
+            color: grey;
+            font-weight: bold;
+            display: inline-block;
+            
+        }
+
+        #help-toggle.open::after {
+            content: ' 🞁'; /* Upward triangle when open */
+            font-family: 'space grotesk', "Noto Serif", serif;
+        }
+
+        #help-toggle:not(.open)::after {
+            content: ' 🞃'; /* Downward triangle when closed */
+            font-family: 'space grotesk', "Noto Serif", serif;
+        }
+
+        #guidebox {
+            /* padding: 0.5rem; */
+            margin-left: 0rem;
+            /* background-color: var(--secondary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 5px; */
+            color: grey;
+            display: none; /* Initially hidden */
+
+        }
+
+
+
     </style>
 </head>
 <body>
+    <div id="overlay"></div>
     <h1 id="title_header">{Allscale Converter}</h1>
 
     <div style="display:flex; justify-content: space-between; margin-bottom: 1rem;">
-        <div id="guidebox">
-            Allscale Converter is a unit converter that allows you to create your own custom units for conversions and for visualizing scale! <br>
-            To get started, click on any unit and click [+Unit] to add a custom unit. To clear all saved units for a type of unit, press [-Clear] <br>
-            This site can be saved and ran locally, all units are saved as cookies. Feel free to adjust size with zoom<br>
-            Issues and support: https://github.com/PianoPiston/AllscaleConverter <br>
-            
+        <div id="help-container">
+            <div id="help-toggle" onclick="toggleGuidebox()">Guide</div> <!-- Downward triangle -->
+            <div id="guidebox" style="display: none;">
+                Allscale Converter is a unit converter that allows you to create your own custom units for conversions and for visualizing scale! <br>
+                To get started, click on any unit and click [+Unit] to add a custom unit. To clear all saved units for a type of unit, press [Clear] <br>
+                This site can be saved and ran locally, all units are saved as cookies. Feel free to adjust size with zoom<br>
+                Issues and support: <a href='https://github.com/PianoPiston/AllscaleConverter'>Github</a> <br>
+            </div>
         </div>
 
         <div id="buttonbox">
@@ -319,7 +397,7 @@
             <select id="distance-unit1" onchange="convertUnits('distance', 'back')">
                 <!-- Options populated dynamically -->
             </select> 
-            <button class="adderButton" onclick="showAddUnitPopup('distance')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('distance')">+Unit</button>
             <input type="number" id="distance-input1" placeholder="Enter value" oninput="convertUnits('distance', 'forw')">
         </div>
         
@@ -327,7 +405,7 @@
             <select id="distance-unit2" onchange="convertUnits('distance', 'forw')">
                 <!-- Options populated dynamically -->
             </select>
-            <button id="clearButton" onclick="clearCookies('distance')">-Clear</button>
+            <button id="clearButton" onclick="clearCookies('distance')">Clear</button>
             <input type="number" id="distance-input2" placeholder="Converted value" oninput="convertUnits('distance', 'back')">
         </div>
     </div>
@@ -338,12 +416,12 @@
     <div id="speed-dropdown" class="dropdown">
         <div class="converter">
             <select id="speed-unit1" onchange="convertUnits('speed', 'back')"></select>
-            <button class="adderButton" onclick="showAddUnitPopup('speed')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('speed')">+Unit</button>
             <input type="number" id="speed-input1" placeholder="Enter value" oninput="convertUnits('speed', 'forw')">
         </div>
         <div class="converter">
             <select id="speed-unit2" onchange="convertUnits('speed', 'forw')"></select>
-            <button id="clearButton" onclick="clearCookies('speed')">-Clear</button>
+            <button id="clearButton" onclick="clearCookies('speed')">Clear</button>
             <input type="number" id="speed-input2" placeholder="Converted value" oninput="convertUnits('speed', 'back')">
         </div>
     </div>
@@ -354,12 +432,12 @@
     <div id="weight-dropdown" class="dropdown"> <!--TOO LATE TO CHANGE ALL THE VARIABLE NAMES-->
         <div class="converter">
             <select id="weight-unit1" onchange="convertUnits('weight', 'back')"></select>
-            <button class="adderButton" onclick="showAddUnitPopup('weight')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('weight')">+Unit</button>
             <input type="number" id="weight-input1" placeholder="Enter value" oninput="convertUnits('weight', 'forw')">
         </div>
         <div class="converter">
             <select id="weight-unit2" onchange="convertUnits('weight', 'forw')"></select>
-            <button id="clearButton" onclick="clearCookies('weight')">-Clear</button>
+            <button id="clearButton" onclick="clearCookies('weight')">Clear</button>
             <input type="number" id="weight-input2" placeholder="Converted value" oninput="convertUnits('weight', 'back')">
         </div>
     </div>    
@@ -370,12 +448,12 @@
     <div id="area-dropdown" class="dropdown">
         <div class="converter">
             <select id="area-unit1" onchange="convertUnits('area', 'back')"></select>
-            <button class="adderButton" onclick="showAddUnitPopup('area')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('area')">+Unit</button>
             <input type="number" id="area-input1" placeholder="Enter value" oninput="convertUnits('area', 'forw')">
         </div>
         <div class="converter">
             <select id="area-unit2" onchange="convertUnits('area', 'forw')"></select>
-            <button id="clearButton" onclick="clearCookies('area')">-Clear</button>
+            <button id="clearButton" onclick="clearCookies('area')">Clear</button>
             <input type="number" id="area-input2" placeholder="Converted value" oninput="convertUnits('area', 'back')">
         </div>
     </div>
@@ -386,12 +464,12 @@
     <div id="data-transfer-dropdown" class="dropdown">
         <div class="converter">
             <select id="data-transfer-unit1" onchange="convertUnits('data-transfer', 'back')"></select>
-            <button class="adderButton" onclick="showAddUnitPopup('data-transfer')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('data-transfer')">+Unit</button>
             <input type="number" id="data-transfer-input1" placeholder="Enter value" oninput="convertUnits('data-transfer', 'forw')">
         </div>
         <div class="converter">
             <select id="data-transfer-unit2" onchange="convertUnits('data-transfer', 'forw')"></select>
-            <button id="clearButton" onclick="clearCookies('data-transfer')">-Clear</button>
+            <button id="clearButton" onclick="clearCookies('data-transfer')">Clear</button>
             <input type="number" id="data-transfer-input2" placeholder="Converted value" oninput="convertUnits('data-transfer', 'back')">
         </div>
     </div>
@@ -402,12 +480,12 @@
     <div id="digital-storage-dropdown" class="dropdown">
         <div class="converter">
             <select id="digital-storage-unit1" onchange="convertUnits('digital-storage', 'back')"></select>
-            <button class="adderButton" onclick="showAddUnitPopup('digital-storage')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('digital-storage')">+Unit</button>
             <input type="number" id="digital-storage-input1" placeholder="Enter value" oninput="convertUnits('digital-storage', 'forw')">
         </div>
         <div class="converter">
             <select id="digital-storage-unit2" onchange="convertUnits('digital-storage', 'forw')"></select>
-            <button id="clearButton" onclick="clearCookies('digital-storage')">-Clear</button>
+            <button id="clearButton" onclick="clearCookies('digital-storage')">Clear</button>
             <input type="number" id="digital-storage-input2" placeholder="Converted value" oninput="convertUnits('digital-storage', 'back')">
         </div>
     </div>
@@ -418,12 +496,12 @@
     <div id="energy-dropdown" class="dropdown">
         <div class="converter">
             <select id="energy-unit1" onchange="convertUnits('energy', 'back')"></select>
-            <button class="adderButton" onclick="showAddUnitPopup('energy')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('energy')">+Unit</button>
             <input type="number" id="energy-input1" placeholder="Enter value" oninput="convertUnits('energy', 'forw')">
         </div>
         <div class="converter">
             <select id="energy-unit2" onchange="convertUnits('energy', 'forw')"></select>
-            <button id="clearButton" onclick="clearCookies('energy')">-Clear</button>
+            <button id="clearButton" onclick="clearCookies('energy')">Clear</button>
             <input type="number" id="energy-input2" placeholder="Converted value" oninput="convertUnits('energy', 'back')">
         </div>
     </div>
@@ -434,12 +512,12 @@
     <div id="volume-dropdown" class="dropdown">
         <div class="converter">
             <select id="volume-unit1" onchange="convertUnits('volume', 'back')"></select>
-            <button class="adderButton" onclick="showAddUnitPopup('volume')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('volume')">+Unit</button>
             <input type="number" id="volume-input1" placeholder="Enter value" oninput="convertUnits('volume', 'forw')">
         </div>
         <div class="converter">
             <select id="volume-unit2" onchange="convertUnits('volume', 'forw')"></select>
-            <button id="clearButton" onclick="clearCookies('volume')">-Clear</button>
+            <button id="clearButton" onclick="clearCookies('volume')">Clear</button>
             <input type="number" id="volume-input2" placeholder="Converted value" oninput="convertUnits('volume', 'back')">
         </div>
     </div>
@@ -449,12 +527,12 @@
     <div id="pressure-dropdown" class="dropdown">
         <div class="converter">
             <select id="pressure-unit1" onchange="convertUnits('pressure','back')"></select>
-            <button class="adderButton" onclick="showAddUnitPopup('pressure')">+ Unit</button>
+            <button class="adderButton" onclick="showAddUnitPopup('pressure')">+Unit</button>
             <input type="number" id="pressure-input1" placeholder="Enter value" oninput="convertUnits('pressure','forw')">
         </div>
         <div class="converter">
             <select id="pressure-unit2" onchange="convertUnits('pressure','forw')"></select>
-            <button id="clearButton" onclick="clearCookies('pressure')">-Clear</button>
+            <button id="clearButton" onclick="clearCookies('pressure')">Clear</button>
             <input type="number" id="pressure-input2" placeholder="Converted value" oninput="convertUnits('pressure', 'back')">
         </div>
     </div>
@@ -538,7 +616,8 @@
             { name: "Terabytes", value: "terabytes", conv_rate: 1e-12 },
             { name: "Petabytes", value: "petabytes", conv_rate: 1e-15 },
             { name: "Bits", value: "bits", conv_rate: 8 },
-            { name: "Kilobits", value: "kilobits", conv_rate: 0.008 }
+            { name: "Kilobits", value: "kilobits", conv_rate: 0.008 },
+            { name: 'Floppy disk (1.44MB)', value: 'floppy_disk_(1.44mb)', conv_rate: 6.944444444444444e-7}
         ];
 
         let energyUnits = [
@@ -550,7 +629,8 @@
             { name: "Kilowatt-Hours", value: "kilowatt_hours", conv_rate: 1/3.6e6 },
             { name: "Electronvolts", value: "electronvolts", conv_rate: 1.60219e-19 },
             { name: "BTUs", value: "btus", conv_rate: 1/1055.06 },
-            { name: 'Cheesburger (319cal)', value: 'burger_(319cal)', conv_rate: 0.0007492342825632203}
+            { name: 'Cheesburger (319cal)', value: 'burger_(319cal)', conv_rate: 0.0007492342825632203},
+            { name: '1 liter of Petrol (33.526kJ)', value: '1_liter_of_petrol_(33.526kj)', conv_rate: 0.00002982759649227465}
         ];
 
         let volumeUnits = [
@@ -570,7 +650,9 @@
             { name: "PSI", value: "psi", conv_rate: 0.0001450377 },
             { name: "Atmospheres", value: "atmospheres", conv_rate: 9.86923266716013e-6 },
             { name: "Torr", value: "torr", conv_rate: 0.00750062 },
-            { name: 'Car tire (2.2bar)', value: 'car_tire_(2.2bar)', conv_rate: 0.0000045454545454545455}
+            { name: 'Car tire (2.2bar)', value: 'car_tire_(2.2bar)', conv_rate: 0.0000045454545454545455},
+            { name: 'Titanic depth (400 atm)', value: 'titanic_depth_(400_atm)', conv_rate: 2.4673081667900326e-8},
+            { name: 'Car pressure washer (2000psi)', value: 'car_pressure_washer_(2000psi)', conv_rate: 7.251885e-8}
         ];
 
 
@@ -615,17 +697,9 @@
 
             // i invented my own way to convert units, see tests.py for notes (no testcases there)
             if (direction === "forw") { // Forward conversion
-                if (unit1.value == "meters") {
-                    input2.value = (input1.value * unit2.conv_rate) // todo, FIX!!!!!!, ANYTHING DIVIDED BY ONE IS ITSELF!!!
-                } else { // also mismatching units for everything else than meters
-                    input2.value = (input1.value * unit2.conv_rate / unit1.conv_rate)
-                }
+                input2.value = (input1.value * unit2.conv_rate / unit1.conv_rate)
             } else if (direction === "back") { // Backward conversion
-                if (unit2.value == "meters") {
-                    input1.value = (input2.value * unit1.conv_rate)
-                } else {
-                    input1.value = (input2.value * unit1.conv_rate / unit2.conv_rate)
-                }
+                input1.value = (input2.value * unit1.conv_rate / unit2.conv_rate)
             }
         }
 
@@ -669,12 +743,14 @@
             popupDiv.innerHTML = popupHTML;
             document.body.appendChild(popupDiv);
             populateDropdown("selection_units", displayUnit);
+            document.getElementById("overlay").style.display = "block";
         }
 
         // Close the popup
         function closePopup() {
             const popup = document.getElementById("add-unit-popup");
             if (popup) popup.remove();
+            document.getElementById("overlay").style.display = "none";
         }
 
         // Save the custom unit
@@ -781,7 +857,7 @@
             // alert(savedDistanceUnits + "\n \n" + distanceUnits)
             // alert(savedVolumeUnits + "\n \n" + volumeUnits)
 
-            populateAll()
+            populateAll();
             const savedTheme = getThemeFromCookies();
             setTheme(savedTheme);
         };
@@ -826,7 +902,21 @@
             }
             return "light"; // Default theme
         };
+
+        function toggleGuidebox() {
+            const guidebox = document.getElementById('guidebox');
+            const toggle = document.getElementById('help-toggle');
+
+            if (guidebox.style.display === 'none') {
+                guidebox.style.display = 'block'; // Show guidebox
+                toggle.classList.add('open');    // Add open state
+            } else {
+                guidebox.style.display = 'none'; // Hide guidebox
+                toggle.classList.remove('open'); // Remove open state
+            }
+        }
         
     </script>
 </body>
 </html>
+

@@ -117,4 +117,39 @@ if color == blue;
 /()=`
 """
 
+changes = """
+
+algorithm optimised with testing/legacy code removed
+
+file restructuring
+
++Unit and clear buttons redesigned
+
+UI fixed
+
+- overlay added and missing code bug fixed.
+
+better user guide
+
+mobile version friendly! 
+
+- working unit adder
+
+- new fonts added
+
+new units
+
+_____________________
+
+The Allscale Converter has undergone significant improvements for enhanced usability and performance. 
+The algorithm has been optimized, legacy code removed, and CSS structures reorganized. 
+The Unit and Clear buttons have been redesigned, alongside UI fixes, 
+including a new overlay feature and a bug fix for missing code and app-breaking feature. 
+The user guides littered around have been revamped for clarity, and the app is now fully mobile-friendly 
+and no longer has un-equal sizing (this took an unfortunate amount of time to figure out). 
+The now fully functional unit adder on mobile is complemented by stylish new fonts and several 
+humorous and practical units added for a better user experience. 
+
+
+"""
 
