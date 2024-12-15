@@ -2,8 +2,7 @@
 
 *Unit converter and scaling tool that allows you to add your own units!*
 
-![image](https://github.com/user-attachments/assets/88bf8112-2fff-44e5-bf59-162e99680cfd)
-
+![image](https://github.com/user-attachments/assets/6fa068c9-199b-421f-92f5-14f7f97c50d1)
 
 # Key features
 
